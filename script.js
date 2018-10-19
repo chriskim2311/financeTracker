@@ -206,6 +206,7 @@ function addNewData() {
         dataType: 'json',
         url: "http://s-apis.learningfuze.com/sgt/create",
         success: function (response) {
+            
 
     }
 
