@@ -5,8 +5,11 @@
 /**
  * Listen for the document to load and initialize the application
  */
-$(document).ready();
+$(document).ready(initializeApp);
 
+var studentArray = [];
+var gradeAverage = 0;
+var deleteRowNumber = 0;
 /**
  * Define all global variables here.  
  */
@@ -27,6 +30,8 @@ $(document).ready();
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
+    getData()
+    addClickHandlersToElements()
 }
 
 /***************************************************************************************************
@@ -36,6 +41,9 @@ function initializeApp(){
 *     
 */
 function addClickHandlersToElements(){
+    $(".addButton").click(handleAddClicked)
+    $(".clearButton").click(handleCancelClick)
+
 }
 
 /***************************************************************************************************
@@ -45,6 +53,8 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(){
+addStudent()
+
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -53,6 +63,7 @@ function handleAddClicked(){
  * @calls: clearAddStudentFormInputs
  */
 function handleCancelClick(){
+    clearAddStudentFormInputs();
 }
 /***************************************************************************************************
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -61,11 +72,32 @@ function handleCancelClick(){
  * @calls clearAddStudentFormInputs, updateStudentList
  */
 function addStudent(){
+
+    var studentDataObject = {};
+
+    var studentName = $("#studentName").val();
+    var studentCourse = $("#course").val();
+    var studentGrade = $("#studentGrade").val();
+
+    $("#userDataForms").find(":input").each(function() {
+        studentDataObject = {
+            studentName: studentName,
+            course: studentCourse,
+            studentGrade: studentGrade
+        }
+    });
+    studentArray.push(studentDataObject);
+    clearAddStudentFormInputs();
+    updateStudentList();
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
+    $('#studentName').val("");
+    $('#course').val("");
+    $('#studentGrade').val("");
+
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -73,6 +105,23 @@ function clearAddStudentFormInputs(){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom(){
+    for (var i = 0; i < studentArray.length; i++) {
+        var studentPosition = studentArray[i];
+        var addRow = $("<tr>").addClass('tableRow');
+        var studentName = $('<td>').append(studentPosition.name);
+        var studentCourse = $("<td>").append(studentPosition.course);
+        var studentGrade = $("<td>").append(studentPosition.grade);
+
+
+        var buttonDiv = $('<td>');
+        var deleteButton = $('<button>').addClass('deleteButton btn btn-danger btn-sm').text('Delete').attr('data-delete-row', deleteRowNumber).click(deleteStudentRow);
+        var buttonContainer = buttonDiv.append(deleteButton);
+        deleteRowNumber++;
+
+
+        $(".student-list tbody").append(addRow);
+        addRow.append(studentName, studentCourse, studentGrade, buttonContainer)
+    }
 }
 
 /***************************************************************************************************
@@ -81,7 +130,11 @@ function renderStudentOnDom(){
  * @returns {undefined} none
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
-function updateStudentList(){
+function updateStudentList(studentObject){
+
+    renderStudentOnDom();
+    calculateGradeAverage();
+    renderGradeAverage();
   
 }
 /***************************************************************************************************
@@ -90,6 +143,14 @@ function updateStudentList(){
  * @returns {number}
  */
 function calculateGradeAverage(){
+    var gradesArray = null;
+    for(var i = 0; i < studentArray.length; i++) {
+        gradesArray = gradesArray + parseFloat(studentArray[i].grade);
+
+        gradeAverage = Math.round(gradesArray / studentArray.length-1)
+
+    }
+    return gradeAverage;
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
@@ -97,9 +158,56 @@ function calculateGradeAverage(){
  * @returns {undefined} none
  */
 function renderGradeAverage(){
+    $('.avgGrade').text(gradeAverage);
+}
+
+
+function deleteStudentRow() {
+    var thisRowID = $(event.currentTarget).attr("data-delete-row");
+    var rowToDelete = studentArray.splice(thisRowID, 1);
+    studentArray = studentArray.concat(rowToDelete);
+    $(event.currentTarget).parents('tr').first().remove();
+
 }
 
 
 
 
+function getData() {
+
+    var studentData = {
+        api_key: "RBu6Wfy1bo"
+    };
+    var ajaxConfig = {
+        data: studentData,
+        method: "POST",
+        dataType: 'json',
+        url: "http://s-apis.learningfuze.com/sgt/get",
+        success: function (response) {
+            studentArray = response.data;
+            console.log(response);
+                updateStudentList(studentArray);
+            }
+        }
+        // error: err=>console.log(err)
+    $.ajax(ajaxConfig)
+
+}
+
+
+function addNewData() {
+    var studentData = {
+        api_key: "RBu6Wfy1bo"
+    };
+
+    var ajaxConfig = {
+        data: studentData,
+        method: "POST",
+        dataType: 'json',
+        url: "http://s-apis.learningfuze.com/sgt/create",
+        success: function (response) {
+
+    }
+
+}}
 
