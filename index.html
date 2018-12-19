@@ -20,7 +20,7 @@
         </h3>
     </div>
     <div class="student-add-form col-sm-3 col-sm-push-8" id="userDataForms">
-        <h4>Add Student</h4>
+        <h4>Add Receipt</h4>
         <div class="input-group form-group">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-user"></span>
@@ -36,10 +36,17 @@
         </div>
         <div class="input-group form-group">
             <span class="input-group-addon">
-                <span class="glyphicon glyphicon-education"></span>
+                <span class="glyphicon glyphicon-credit-card"></span>
             </span>
             <input type="text" class="form-control" name="studentGrade" id="studentGrade"
                    placeholder="Amount">
+        </div>
+        <div class="input-group form-group">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+            <input type="text" class="form-control" name="date" id="date"
+                   placeholder="Date">
         </div>
         <button type="button" class="addButton btn-success" onclick="">Add</button>
         <button type="button" class="clearButton btn-danger" onclick="">Cancel</button>
@@ -48,9 +55,10 @@
         <table class="student-list table table-responsive">
             <thead>
             <tr>
-                <th>Student Name</th>
-                <th>Student Course</th>
-                <th>Student Grade</th>
+                <th>Store Name</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Date</th>
                 <th>Operations</th>
             </tr>
             </thead>
