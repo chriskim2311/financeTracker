@@ -86,6 +86,7 @@ function addStudent(){
             studentGrade: studentGrade
         }
     });
+    addNewData(studentName, studentCourse, studentGrade);
     studentArray.push(studentDataObject);
     clearAddStudentFormInputs();
     updateStudentList();
@@ -118,6 +119,13 @@ function renderStudentOnDom(){
         var buttonContainer = buttonDiv.append(deleteButton);
         deleteRowNumber++;
 
+        deleteButton.on('click', function() {
+            var studentID = studentPosition.id;
+            deleteData(studentID);
+        })
+
+
+
 
         $(".student-list tbody").append(addRow);
         addRow.append(studentName, studentCourse, studentGrade, buttonContainer)
@@ -130,7 +138,7 @@ function renderStudentOnDom(){
  * @returns {undefined} none
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
-function updateStudentList(studentObject){
+function updateStudentList(){
 
     renderStudentOnDom();
     calculateGradeAverage();
@@ -170,9 +178,6 @@ function deleteStudentRow() {
 
 }
 
-
-
-
 function getData() {
 
     var studentData = {
@@ -189,15 +194,17 @@ function getData() {
                 updateStudentList(studentArray);
             }
         }
-        // error: err=>console.log(err)
     $.ajax(ajaxConfig)
 
 }
 
 
-function addNewData() {
+function addNewData(studentName, studentCourse, studentGrade) {
     var studentData = {
-        api_key: "RBu6Wfy1bo"
+        api_key: "RBu6Wfy1bo",
+        name: studentName,
+        grade: studentGrade,
+        course: studentCourse
     };
 
     var ajaxConfig = {
@@ -206,9 +213,29 @@ function addNewData() {
         dataType: 'json',
         url: "http://s-apis.learningfuze.com/sgt/create",
         success: function (response) {
-            
-
+            console.log(response);
+            getData()
+        }
     }
+        $.ajax(ajaxConfig)
+}
 
-}}
 
+
+function deleteData(studentId) {
+    var studentData = {
+        api_key: "RBu6Wfy1bo",
+        student_id: studentId,
+    };
+
+    var ajaxConfig = {
+        data: studentData,
+        method: "POST",
+        dataType: 'json',
+        url: "http://s-apis.learningfuze.com/sgt/delete",
+        success: function (response) {
+            console.log(response)
+        }
+    }
+    $.ajax(ajaxConfig)
+}
