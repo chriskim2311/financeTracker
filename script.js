@@ -7,7 +7,7 @@
  */
 $(document).ready(initializeApp);
 
-var studentArray = [];
+var receiptDataArray = [];
 var gradeAverage = 0;
 var deleteRowNumber = 0;
 /**
@@ -73,21 +73,23 @@ function handleCancelClick(){
  */
 function addStudent(){
 
-    var studentDataObject = {};
+    var receiptDataObject = {};
 
-    var studentName = $("#studentName").val();
-    var studentCourse = $("#course").val();
-    var studentGrade = $("#studentGrade").val();
+    var store_name = $("#store_name");
+    var category = $("#category");
+    var amount = $("#amount");
+    var date = $("#date");
 
     $("#userDataForms").find(":input").each(function() {
-        studentDataObject = {
-            studentName: studentName,
-            course: studentCourse,
-            studentGrade: studentGrade
+        receiptDataObject = {
+            store_name: store_name,
+            category: category,
+            amount: amount, 
+            date: date
         }
     });
-    addNewData(studentName, studentCourse, studentGrade);
-    studentArray.push(studentDataObject);
+    addNewData(store_name, category, amount, date);
+    receiptDataArray.push(receiptDataObject);
     clearAddStudentFormInputs();
     updateStudentList();
 }
@@ -199,22 +201,24 @@ function getData() {
 }
 
 
-function addNewData(studentName, studentCourse, studentGrade) {
-    var studentData = {
-        api_key: "RBu6Wfy1bo",
-        name: studentName,
-        grade: studentGrade,
-        course: studentCourse
+function addNewData(id, store_name, category, amount, date) {
+    var receiptData = {
+        // api_key: "RBu6Wfy1bo",
+        store_name: store_name,
+        category: category,
+        amount: amount, 
+        date: date, 
+        'action': 'create'
     };
 
     var ajaxConfig = {
-        data: studentData,
+        data: receiptData,
         method: "POST",
         dataType: 'json',
-        url: "http://s-apis.learningfuze.com/sgt/create",
+        url: "api/finance.php",
         success: function (response) {
             console.log(response);
-            getData()
+            // getData()
         }
     }
         $.ajax(ajaxConfig)
