@@ -1,11 +1,13 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "stingray4231";
+
+
+$servername = "kim-chris.com";
+$username = "chris";
+$password = "bananaRacecar";
 $database_name = "finance_tracker";
-// $port = "8888";
+$port = "3306";
 // Create connection
-$conn = new mysqli($servername, $username, $password, $database_name);
+$conn = new mysqli($servername, $username, $password, $database_name,$port);
 // Check connection
 if (empty($conn)) {
     print(" No Connection");

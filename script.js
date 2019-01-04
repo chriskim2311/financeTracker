@@ -8,7 +8,7 @@
 $(document).ready(initializeApp);
 
 var receiptDataArray = [];
-var gradeAverage = 0;
+var totalSpent = 0;
 var deleteRowNumber = 0;
 /**
  * Define all global variables here.  
@@ -53,7 +53,7 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(){
-addStudent()
+addReceipt()
 
 }
 /***************************************************************************************************
@@ -71,35 +71,36 @@ function handleCancelClick(){
  * @return undefined
  * @calls clearAddStudentFormInputs, updateStudentList
  */
-function addStudent(){
+function addReceipt(){
 
     var receiptDataObject = {};
 
-    var store_name = $("#store_name");
-    var category = $("#category");
-    var amount = $("#amount");
-    var date = $("#date");
+    receiptDataObject.store_name = $("#store_name").val();
+    receiptDataObject.category = $("#category").val();
+    receiptDataObject.amount = $("#amount").val();
+    receiptDataObject.date = $("#date").val();
 
-    $("#userDataForms").find(":input").each(function() {
-        receiptDataObject = {
-            store_name: store_name,
-            category: category,
-            amount: amount, 
-            date: date
-        }
-    });
-    addNewData(store_name, category, amount, date);
+    // $("#userDataForms").find(":input").each(function() {
+    //     receiptDataObject = {
+    //         store_name: store_name,
+    //         category: category,
+    //         amount: amount, 
+    //         date: date
+    //     }
+    // });
+    addNewData(receiptDataObject);
     receiptDataArray.push(receiptDataObject);
-    clearAddStudentFormInputs();
-    updateStudentList();
+    clearAddReceiptsFormInputs();
+   
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
-function clearAddStudentFormInputs(){
-    $('#studentName').val("");
-    $('#course').val("");
-    $('#studentGrade').val("");
+function clearAddReceiptsFormInputs(){
+    $('#store_name').val("");
+    $('#category').val("");
+    $('#amount').val("");
+    $('#date').val("");
 
 }
 /***************************************************************************************************
@@ -107,13 +108,14 @@ function clearAddStudentFormInputs(){
  * into the .student_list tbody
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
-function renderStudentOnDom(){
-    for (var i = 0; i < studentArray.length; i++) {
-        var studentPosition = studentArray[i];
+function renderReceiptsOnDom(receiptDataArray){
+    for (var i = 0; i < receiptDataArray.length; i++) {
+        var receiptPosition = receiptDataArray[i];
         var addRow = $("<tr>").addClass('tableRow');
-        var studentName = $('<td>').append(studentPosition.name);
-        var studentCourse = $("<td>").append(studentPosition.course);
-        var studentGrade = $("<td>").append(studentPosition.grade);
+        var store_name = $('<td>').append(receiptPosition.store_name);
+        var category = $("<td>").append(receiptPosition.category);
+        var amount = $("<td>").append(receiptPosition.amount);
+        var date = $("<td>").append(receiptPosition.date);
 
 
         var buttonDiv = $('<td>');
@@ -122,15 +124,12 @@ function renderStudentOnDom(){
         deleteRowNumber++;
 
         deleteButton.on('click', function() {
-            var studentID = studentPosition.id;
-            deleteData(studentID);
+            var receiptID = receiptPosition.id;
+            deleteData(receiptID);
         })
 
-
-
-
         $(".student-list tbody").append(addRow);
-        addRow.append(studentName, studentCourse, studentGrade, buttonContainer)
+        addRow.append(store_name, category, amount, date, buttonContainer)
     }
 }
 
@@ -140,11 +139,11 @@ function renderStudentOnDom(){
  * @returns {undefined} none
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
-function updateStudentList(){
+function updateReceiptList(receiptDataArray){
 
-    renderStudentOnDom();
-    calculateGradeAverage();
-    renderGradeAverage();
+    renderReceiptsOnDom(receiptDataArray);
+    calculateTotalSpent(receiptDataArray);
+    // renderTotalSpent(totalSpent);
   
 }
 /***************************************************************************************************
@@ -152,23 +151,24 @@ function updateStudentList(){
  * @param: {array} students  the array of student objects
  * @returns {number}
  */
-function calculateGradeAverage(){
-    var gradesArray = null;
-    for(var i = 0; i < studentArray.length; i++) {
-        gradesArray = gradesArray + parseFloat(studentArray[i].grade);
+function calculateTotalSpent(receiptDataArray){
+    var totalSpent = null;
 
-        gradeAverage = Math.round(gradesArray / studentArray.length-1)
-
+    console.log("DATTTAAA:", receiptDataArray)
+    for(var i = 0; i < receiptDataArray.length; i++) {
+        totalSpent +=  parseFloat(receiptDataArray[i].amount);
+        console.log(totalSpent)
     }
-    return gradeAverage;
+    console.log(totalSpent)
+   renderTotalSpent(totalSpent);
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
  * @param: {number} average    the grade average
  * @returns {undefined} none
  */
-function renderGradeAverage(){
-    $('.avgGrade').text(gradeAverage);
+function renderTotalSpent(totalSpent){
+    $('.totalSpent').text("$"+totalSpent);
 }
 
 
@@ -182,18 +182,19 @@ function deleteStudentRow() {
 
 function getData() {
 
-    var studentData = {
-        api_key: "RBu6Wfy1bo"
+    var receiptData = {
+        'action': 'read'
+        // api_key: "RBu6Wfy1bo"
     };
     var ajaxConfig = {
-        data: studentData,
+        data: receiptData,
         method: "POST",
         dataType: 'json',
-        url: "http://s-apis.learningfuze.com/sgt/get",
+        url:  "api/finance.php",
         success: function (response) {
-            studentArray = response.data;
+            receiptDataArray = response.clients;
             console.log(response);
-                updateStudentList(studentArray);
+                updateReceiptList(receiptDataArray);
             }
         }
     $.ajax(ajaxConfig)
@@ -201,15 +202,17 @@ function getData() {
 }
 
 
-function addNewData(id, store_name, category, amount, date) {
+function addNewData(receiptDataObject) {
     var receiptData = {
         // api_key: "RBu6Wfy1bo",
-        store_name: store_name,
-        category: category,
-        amount: amount, 
-        date: date, 
-        'action': 'create'
+        'action': 'insert',
+        store_name: receiptDataObject.store_name,
+        category: receiptDataObject.category,
+        amount: receiptDataObject.amount, 
+        date: receiptDataObject.date
     };
+
+    console.log("receipt", receiptData)
 
     var ajaxConfig = {
         data: receiptData,
@@ -226,17 +229,18 @@ function addNewData(id, store_name, category, amount, date) {
 
 
 
-function deleteData(studentId) {
-    var studentData = {
-        api_key: "RBu6Wfy1bo",
-        student_id: studentId,
+function deleteData(receiptId) {
+    var receiptData = {
+        // api_key: "RBu6Wfy1bo",
+        receiptId: receiptId,
+        'action': 'delete'
     };
 
     var ajaxConfig = {
-        data: studentData,
+        data: receiptData,
         method: "POST",
         dataType: 'json',
-        url: "http://s-apis.learningfuze.com/sgt/delete",
+        url: "api/finance.php",
         success: function (response) {
             console.log(response)
         }

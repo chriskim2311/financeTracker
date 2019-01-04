@@ -1,4 +1,8 @@
 <?php
+
+header("Access-Control-Allow-Origin: *");
+
+
 $LOCAL_ACCESS = true;
 $output = [
     'success' => false,
@@ -10,6 +14,7 @@ if(empty($_POST['action'])){
     exit();
 }
 require_once('mysql_connect.php');
+
 switch($_POST['action']){
     case 'read':
         include('data/read.php');
@@ -18,7 +23,7 @@ switch($_POST['action']){
         include('data/insert.php');
         break;
     case 'delete':
-        include('data/delete.php');
+        include('api/data/delete.php');
         break;
     default:
         $output['errors'][] = 'invalid action';
