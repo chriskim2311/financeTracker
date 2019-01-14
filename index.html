@@ -11,6 +11,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
     
+
     <script src="script.js"></script>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
@@ -19,11 +20,13 @@
     <div class="row">
         <div class="col-sm-offset-1 col-sm-10">
             <!-- only show this element when the isnt on mobile -->
+
             <h1 class="visible-sm-md-lg hidden-xs">Finance Tracker
                 <small class="pull-right">Total Spent : <span class="totalSpent label label-default"></span></small>
             </h1>
             <!-- only show this element when the user gets to a mobile version -->
             <h3 class="visible-xs hidden-sm-md-lg">Finance Tracker
+
                 <small class="pull-right">Total Spent : <span class="totalSpent label label-default"></span></small>
             </h3>
         </div>
@@ -51,7 +54,9 @@
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
                 </span>
+
                 <input type="date" class="form-control" name="date" id="date" placeholder="Date">
+
             </div>
             <button type="button" class="addButton btn-success" onclick="">Add</button>
             <button type="button" class="clearButton btn-danger" onclick="">Cancel</button>
@@ -67,7 +72,9 @@
                         <th>Operations</th>
                     </tr>
                 </thead>
+
                 <tbody class="receiptTable">
+
                 </tbody>
             </table>
         </div>
