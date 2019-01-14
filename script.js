@@ -29,7 +29,7 @@ var deleteRowNumber = 0;
 * @returns: {undefined} none
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
-function initializeApp(){
+function initializeApp() {
     getData()
     addClickHandlersToElements()
 }
@@ -40,7 +40,7 @@ function initializeApp(){
 * @returns  {undefined}
 *     
 */
-function addClickHandlersToElements(){
+function addClickHandlersToElements() {
     $(".addButton").click(handleAddClicked)
     $(".clearButton").click(handleCancelClick)
 
@@ -52,8 +52,8 @@ function addClickHandlersToElements(){
  * @return: 
        none
  */
-function handleAddClicked(){
-addReceipt()
+function handleAddClicked() {
+    addReceipt()
 
 }
 /***************************************************************************************************
@@ -62,7 +62,7 @@ addReceipt()
  * @returns: {undefined} none
  * @calls: clearAddStudentFormInputs
  */
-function handleCancelClick(){
+function handleCancelClick() {
     clearAddStudentFormInputs();
 }
 /***************************************************************************************************
@@ -71,14 +71,21 @@ function handleCancelClick(){
  * @return undefined
  * @calls clearAddStudentFormInputs, updateStudentList
  */
-function addReceipt(){
+function addReceipt() {
 
     var receiptDataObject = {};
 
+    // if (receiptDataArray.length) {
+    //     receiptDataArray.id = receiptDataArray.length;
+    // }
+    // else {
+    //     receiptDataArray.id = 0;
+    // }
     receiptDataObject.store_name = $("#store_name").val();
     receiptDataObject.category = $("#category").val();
     receiptDataObject.amount = $("#amount").val();
     receiptDataObject.date = $("#date").val();
+
 
     // $("#userDataForms").find(":input").each(function() {
     //     receiptDataObject = {
@@ -91,12 +98,12 @@ function addReceipt(){
     addNewData(receiptDataObject);
     receiptDataArray.push(receiptDataObject);
     clearAddReceiptsFormInputs();
-   
+
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
-function clearAddReceiptsFormInputs(){
+function clearAddReceiptsFormInputs() {
     $('#store_name').val("");
     $('#category').val("");
     $('#amount').val("");
@@ -108,19 +115,24 @@ function clearAddReceiptsFormInputs(){
  * into the .student_list tbody
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
+
 function renderReceiptsOnDom(receiptDataArray){
     $(".tableRow").empty()
+
     for (var i = 0; i < receiptDataArray.length; i++) {
         var receiptPosition = receiptDataArray[i];
         var addRow = $("<tr>").addClass('tableRow');
         var store_name = $('<td>').append(receiptPosition.store_name);
         var category = $("<td>").append(receiptPosition.category);
-        var amount = $("<td>").append(receiptPosition.amount);
+        var amount = $("<td>").append("$" + parseFloat(receiptPosition.amount).toFixed(2));
         var date = $("<td>").append(receiptPosition.date);
         var receiptID = receiptPosition.ID;
 
+        var ID = receiptPosition.ID
+
 
         var buttonDiv = $('<td>');
+
         var deleteButton = $('<button>').addClass('deleteButton btn btn-danger btn-sm').text('Delete').attr('data-delete-row', deleteRowNumber);
         var updateButton = $("<button>", {
             class: "btn btn-warning btn-sm",
@@ -136,6 +148,7 @@ function renderReceiptsOnDom(receiptDataArray){
             // var receiptID = receiptPosition.ID;
             deleteReceiptModal(addRow)
             // deleteData(receiptID);
+
         })
 
         $(".student-list tbody").append(addRow);
@@ -149,36 +162,37 @@ function renderReceiptsOnDom(receiptDataArray){
  * @returns {undefined} none
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
-function updateReceiptList(receiptDataArray){
+function updateReceiptList(receiptDataArray) {
 
     renderReceiptsOnDom(receiptDataArray);
     calculateTotalSpent(receiptDataArray);
     // renderTotalSpent(totalSpent);
-  
+
 }
 /***************************************************************************************************
  * calculateGradeAverage - loop through the global student array and calculate average grade and return that value
  * @param: {array} students  the array of student objects
  * @returns {number}
  */
-function calculateTotalSpent(receiptDataArray){
-    var totalSpent = null;
+function calculateTotalSpent(receiptDataArray) {
+    var totalSpent = 0;
 
     console.log("DATTTAAA:", receiptDataArray)
-    for(var i = 0; i < receiptDataArray.length; i++) {
-        totalSpent +=  parseFloat(receiptDataArray[i].amount);
+    for (var i = 0; i < receiptDataArray.length; i++) {
+
+        totalSpent += parseFloat(receiptDataArray[i].amount);
         console.log(totalSpent)
     }
     console.log(totalSpent)
-   renderTotalSpent(totalSpent);
+    renderTotalSpent(totalSpent);
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
  * @param: {number} average    the grade average
  * @returns {undefined} none
  */
-function renderTotalSpent(totalSpent){
-    $('.totalSpent').text("$"+totalSpent);
+function renderTotalSpent(totalSpent) {
+    $('.totalSpent').text("$" + totalSpent);
 }
 
 
@@ -201,13 +215,13 @@ function getData() {
         data: receiptData,
         method: "POST",
         dataType: 'json',
-        url:  "api/finance.php",
+        url: "api/finance.php",
         success: function (response) {
             receiptDataArray = response.clients;
             console.log(response);
-                updateReceiptList(receiptDataArray);
-            }
+            updateReceiptList(receiptDataArray);
         }
+    }
     $.ajax(ajaxConfig)
 
 }
@@ -219,11 +233,9 @@ function addNewData(receiptDataObject) {
         'action': 'insert',
         store_name: receiptDataObject.store_name,
         category: receiptDataObject.category,
-        amount: receiptDataObject.amount, 
+        amount: receiptDataObject.amount,
         date: receiptDataObject.date
     };
-
-    console.log("receipt", receiptData)
 
     var ajaxConfig = {
         data: receiptData,
@@ -235,7 +247,7 @@ function addNewData(receiptDataObject) {
             // getData()
         }
     }
-        $.ajax(ajaxConfig)
+    $.ajax(ajaxConfig)
 }
 
 
@@ -245,7 +257,7 @@ function deleteData(ID) {
         // api_key: "RBu6Wfy1bo",
         'action': 'delete',
         ID: ID,
-        
+       
     };
 
     var ajaxConfig = {
