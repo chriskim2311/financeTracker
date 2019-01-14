@@ -9,7 +9,7 @@ $(document).ready(initializeApp);
 
 var receiptDataArray = [];
 var totalSpent = 0;
-var deleteRowNumber = 0;
+// var deleteRowNumber = 0;
 /**
  * Define all global variables here.  
  */
@@ -117,7 +117,8 @@ function clearAddReceiptsFormInputs() {
  */
 
 function renderReceiptsOnDom(receiptDataArray){
-    $(".tableRow").empty()
+    $(".receiptTable").empty()
+     var deleteRowNumber = 0
 
     for (var i = 0; i < receiptDataArray.length; i++) {
         var receiptPosition = receiptDataArray[i];
@@ -302,7 +303,7 @@ function updateReceiptData(product) {
 
 
  function deleteReceiptModal(addRow) {
-    
+    debugger
     // var thisRowIndex = $(addRow).closest("tr").index();
     // var thisRowIndex = $(this).closest("tr").index()
     var thisRowIndex = $(event.currentTarget).attr("data-delete-row")
