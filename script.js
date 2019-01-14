@@ -109,6 +109,7 @@ function clearAddReceiptsFormInputs(){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderReceiptsOnDom(receiptDataArray){
+    $(".tableRow").empty()
     for (var i = 0; i < receiptDataArray.length; i++) {
         var receiptPosition = receiptDataArray[i];
         var addRow = $("<tr>").addClass('tableRow');
@@ -116,16 +117,25 @@ function renderReceiptsOnDom(receiptDataArray){
         var category = $("<td>").append(receiptPosition.category);
         var amount = $("<td>").append(receiptPosition.amount);
         var date = $("<td>").append(receiptPosition.date);
+        var receiptID = receiptPosition.ID;
 
 
         var buttonDiv = $('<td>');
-        var deleteButton = $('<button>').addClass('deleteButton btn btn-danger btn-sm').text('Delete').attr('data-delete-row', deleteRowNumber).click(deleteStudentRow);
-        var buttonContainer = buttonDiv.append(deleteButton);
+        var deleteButton = $('<button>').addClass('deleteButton btn btn-danger btn-sm').text('Delete').attr('data-delete-row', deleteRowNumber);
+        var updateButton = $("<button>", {
+            class: "btn btn-warning btn-sm",
+            text: 'Update'
+      }).css({"margin-right":"10px"});
+
+    //   deleteButton.on("click", (receiptID)=>{ deleteReceiptModal(receiptID)});
+      updateButton.on("click", updateReceiptModal(receiptID));
+        var buttonContainer = buttonDiv.append(updateButton, deleteButton );
         deleteRowNumber++;
 
         deleteButton.on('click', function() {
-            var receiptID = receiptPosition.id;
-            deleteData(receiptID);
+            // var receiptID = receiptPosition.ID;
+            deleteReceiptModal(addRow)
+            // deleteData(receiptID);
         })
 
         $(".student-list tbody").append(addRow);
@@ -172,11 +182,12 @@ function renderTotalSpent(totalSpent){
 }
 
 
-function deleteStudentRow() {
+function deleteReceiptRow() {
     var thisRowID = $(event.currentTarget).attr("data-delete-row");
-    var rowToDelete = studentArray.splice(thisRowID, 1);
-    studentArray = studentArray.concat(rowToDelete);
+    var rowToDelete = receiptDataArray.splice(thisRowID, 1);
+    receiptDataArray = receiptDataArray.concat(rowToDelete);
     $(event.currentTarget).parents('tr').first().remove();
+    getData()
 
 }
 
@@ -229,11 +240,12 @@ function addNewData(receiptDataObject) {
 
 
 
-function deleteData(receiptId) {
+function deleteData(ID) {
     var receiptData = {
         // api_key: "RBu6Wfy1bo",
-        receiptId: receiptId,
-        'action': 'delete'
+        'action': 'delete',
+        ID: ID,
+        
     };
 
     var ajaxConfig = {
@@ -246,4 +258,88 @@ function deleteData(receiptId) {
         }
     }
     $.ajax(ajaxConfig)
+}
+
+
+function updateReceiptData(product) {
+    var ajaxConfig = {
+          url: "api/access.php",
+          method: "POST",
+          dataType: "json",
+          data: {
+            action: "update",
+            store_name: receiptDataObject.store_name,
+            category: receiptDataObject.category,
+            amount: receiptDataObject.amount, 
+            date: receiptDataObject.date,
+            id: product.id
+          },
+          success: function(response) {
+            receiptDataArray = response.clients;
+            console.log(response);
+            updateReceiptList(receiptDataArray);
+            return(response);
+          },
+          error: function(response) {
+                console.log("error message: ",response);
+          }
+    };
+    $.ajax(ajaxConfig);
+  }
+
+
+
+ function deleteReceiptModal(addRow) {
+     debugger
+    // var thisRowIndex = $(addRow).closest("tr").index();
+    // var thisRowIndex = $(this).closest("tr").index()
+    var thisRowIndex = $(event.currentTarget).attr("data-delete-row")
+    var ID = receiptDataArray[thisRowIndex].ID;
+    // var index = receiptDataArray.indexOf();
+    // var indexReceiptArray = $(this).parent().parent().index(); 
+    // var indexReceiptArray = receiptID; 
+
+    // Modal
+    var modalFade = $("<div class='modal fade' id='editStudentModal' tabindex='-1' role='dialog' aria-labelledby='editStudentModalLabel' aria-hidden='true'>");
+    var modalDialog = $("<div class='modal-dialog' role='document'>");
+    var modalContent = $("<div>").addClass("modal-content"); 
+    var modalHeader = $("<div>").addClass("modal-header"); 
+    var modalTitle = $("<div>").addClass("modal-title").text("Are you sure you want to remove this receipt?");
+    var closeModalButton = $("<button type='button' class='close' data-dismiss='modal' aria-label='Close'>");
+    var closeModalButtonSymbol = $("<span aria-hidden='true'>").text("x");
+    closeModalButton.append(closeModalButtonSymbol);
+
+    modalHeader.append(modalTitle);
+    modalHeader.append(closeModalButton);
+    modalContent.append(modalHeader);
+
+
+    var modalFooter = $("<div>").addClass("modal-footer");
+    var cancelDeleteButton = $("<button class='btn btn-secondary' data-dismiss='modal'>");
+    cancelDeleteButton.text("Cancel");
+    var confirmDeleteButton= $("<button class='btn btn-danger' data-dismiss='modal'>");
+
+    confirmDeleteButton.on("click", () => {
+        deleteData(ID);
+        deleteReceiptRow(thisRowIndex)
+        
+    }); // Anonymous function to avoid firing as soon as modal loads
+    confirmDeleteButton.text("DELETE");
+    modalFooter.append(cancelDeleteButton);
+    modalFooter.append(confirmDeleteButton);
+    modalContent.append(modalFooter);
+
+    modalDialog.append(modalContent);
+    modalFade.append(modalDialog);
+
+    $(modalFade).modal("show");
+    // When the modal hides, call the remove method to remove the modal from the DOM
+    $(modalFade).on('hidden.bs.modal',() => {
+        $(modalFade).remove();
+    });
+}
+  
+
+function updateReceiptModal() {
+
 }

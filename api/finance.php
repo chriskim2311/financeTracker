@@ -26,7 +26,7 @@ switch($_POST['action']){
         include('data/update.php');
         break;
     case 'delete':
-        include('api/data/delete.php');
+        include('data/delete.php');
         break;
     default:
         $output['errors'][] = 'invalid action';
