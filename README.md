@@ -1,4 +1,4 @@
-# Finance Tracker: CRUD and Confirmation Modal
+# Finance Tracker: CRUD and Confirmation Modals
 
 ### Description of features
 See all current receipts listed for certain time period, create, update, and delete receipts from DOM and database.

@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -7,66 +8,64 @@
     <script src="script.js"></script>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
-<body>
-<div class="row">
-    <div class="col-sm-offset-1 col-sm-10">
-        <!-- only show this element when the isnt on mobile -->
-        <h1  class="visible-sm-md-lg hidden-xs">Spending Tracker
-            <small class="pull-right">Total Spent : <span class="totalSpent label label-default"></span></small>
-        </h1>
-        <!-- only show this element when the user gets to a mobile version -->
-        <h3 class="visible-xs hidden-sm-md-lg">Spending Tracker
-            <small class="pull-right">Total Spent : <span class="totalSpent label label-default"></span></small>
-        </h3>
-    </div>
-    <div class="student-add-form col-sm-3 col-sm-push-8" id="userDataForms">
-        <h4>Add Receipt</h4>
-        <div class="input-group form-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-user"></span>
-            </span>
-            <input type="text" class="form-control" name="store_name" id="store_name" placeholder="Store Name">
-        </div>
-        <div class="input-group form-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-list-alt"></span>
-            </span>
-            <input type="text" class="form-control" name="category" id="category"
-                   placeholder="Category">
-        </div>
-        <div class="input-group form-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-credit-card"></span>
-            </span>
-            <input type="text" class="form-control" name="amount" id="amount"
-                   placeholder="Amount">
-        </div>
-        <div class="input-group form-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-time"></span>
-            </span>
-            <input type="date" class="form-control" name="date" id="date"
-                   placeholder="Date">
-        </div>
-        <button type="button" class="addButton btn-success" onclick="">Add</button>
-        <button type="button" class="clearButton btn-danger" onclick="">Cancel</button>
-    </div>
-    <div class="student-list-container col-sm-offset-1 col-sm-7 col-sm-pull-3">
-        <table class="student-list table table-responsive">
-            <thead>
-            <tr>
-                <th>Store Name</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Operations</th>
-            </tr>
-            </thead>
-            <tbody class="receiptTable">
-            </tbody>
-        </table>
-    </div>
-</div>
-</body>
-</html>
 
+<body>
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10">
+            <!-- only show this element when the isnt on mobile -->
+            <h1 class="visible-sm-md-lg hidden-xs">Finance Tracker
+                <small class="pull-right">Total Spent : <span class="totalSpent label label-default"></span></small>
+            </h1>
+            <!-- only show this element when the user gets to a mobile version -->
+            <h3 class="visible-xs hidden-sm-md-lg">Finance Tracker
+                <small class="pull-right">Total Spent : <span class="totalSpent label label-default"></span></small>
+            </h3>
+        </div>
+        <div class="student-add-form col-sm-3 col-sm-push-8" id="userDataForms">
+            <h4>Add Receipt</h4>
+            <div class="input-group form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-user"></span>
+                </span>
+                <input type="text" class="form-control" name="store_name" id="store_name" placeholder="Store Name">
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                </span>
+                <input type="text" class="form-control" name="category" id="category" placeholder="Category">
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-credit-card"></span>
+                </span>
+                <input type="text" class="form-control" name="amount" id="amount" placeholder="Amount">
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+                <input type="date" class="form-control" name="date" id="date" placeholder="Date">
+            </div>
+            <button type="button" class="addButton btn-success" onclick="">Add</button>
+            <button type="button" class="clearButton btn-danger" onclick="">Cancel</button>
+        </div>
+        <div class="student-list-container col-sm-offset-1 col-sm-7 col-sm-pull-3">
+            <table class="student-list table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Store Name</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Operations</th>
+                    </tr>
+                </thead>
+                <tbody class="receiptTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

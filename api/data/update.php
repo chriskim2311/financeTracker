@@ -1,6 +1,6 @@
 <?php
 
-if(empty($_POST['store_name']) || empty($_POST['category']) || empty($_POST['amount']) || empty($_POST['date']) || empty($_POST["id"])) {
+if(empty($_POST['store_name']) || empty($_POST['category']) || empty($_POST['amount']) || empty($_POST['date'])) {
     $output["errors"] = "Edit Failed";
   }
 
@@ -8,16 +8,19 @@ $store_name = $_POST['store_name'];
 $category = $_POST['category'];
 $amount = $_POST['amount'];
 $date = $_POST['date'];
-$id = $_POST['id'];
-
-
-$query = "UPDATE receipts (store_name, category, amount, date, id) VALUES ('$store_name', '$category', '$amount','$date', '$id')";
-
+$ID = $_POST['ID'];
 
 $output = [
     'success' => false,
     'errors' => [],
 ];
+
+
+
+$query = "UPDATE `receipts` SET `store_name` = '$store_name', `category` = '$category' , `amount` = '$amount' , `date` = '$date' WHERE `ID` = '$ID'  ";
+
+
+
 $result = mysqli_query($conn, $query);
 
 
