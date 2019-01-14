@@ -352,7 +352,6 @@ function deleteReceiptModal(addRow) {
 
 
 function updateReceiptModal() {
-    debugger
     var thisRowIndex = $(event.currentTarget).attr("data-delete-row")
     var receiptData = receiptDataArray[thisRowIndex]
     var ID = receiptDataArray[thisRowIndex].ID;
