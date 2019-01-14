@@ -22,6 +22,9 @@ switch($_POST['action']){
     case 'insert':
         include('data/insert.php');
         break;
+    case 'update':
+        include('data/update.php');
+        break;
     case 'delete':
         include('data/delete.php');
         break;
