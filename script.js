@@ -302,7 +302,7 @@ function updateReceiptData(product) {
 
 
  function deleteReceiptModal(addRow) {
-     debugger
+    
     // var thisRowIndex = $(addRow).closest("tr").index();
     // var thisRowIndex = $(this).closest("tr").index()
     var thisRowIndex = $(event.currentTarget).attr("data-delete-row")
