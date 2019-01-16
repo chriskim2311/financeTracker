@@ -28,6 +28,9 @@ switch($_POST['action']){
     case 'delete':
         include('data/delete.php');
         break;
+    case 'cron':
+        include('data/cron.php');
+        break;
     default:
         $output['errors'][] = 'invalid action';
 }
