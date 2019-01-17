@@ -7,14 +7,15 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="script.js"></script>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 
 <body>
-    <div class="row">
+    <div class="row" style="
+    padding: 10px">
         <div class="col-sm-offset-1 col-sm-10">
             <!-- only show this element when the isnt on mobile -->
 
@@ -58,7 +59,7 @@
             <button type="button" class="addButton btn-success" onclick="">Add</button>
             <button type="button" class="clearButton btn-danger" onclick="">Cancel</button>
         </div>
-        <div class="student-list-container col-sm-offset-1 col-sm-7 col-sm-pull-3">
+        <div class="student-list-container col-sm-offset-1 col-sm-7 col-sm-pull-3" style="overflow: scroll">
             <table class="student-list table table-responsive">
                 <thead>
                     <tr>
@@ -66,7 +67,7 @@
                         <th>Category</th>
                         <th>Amount</th>
                         <th>Date</th>
-                        <th>Operations</th>
+                        <th>Ops</th>
                     </tr>
                 </thead>
 
