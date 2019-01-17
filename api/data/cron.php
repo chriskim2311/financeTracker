@@ -1,5 +1,21 @@
 <?php
-$query = "DELETE * FROM `receipts`";
+$servername = "";
+$username = "";
+$password = "";
+$database_name = "";
+$port = "3306";
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database_name,$port);
+// Check connection
+if (empty($conn)) {
+    print(" No Connection");
+    exit();
+}
+
+
+
+
+$query = "TRUNCATE TABLE `receipts`";
 
 $result = mysqli_query($conn,$query);
 
@@ -40,7 +56,7 @@ $dataArray = [
     [
         "store_name" => "Trader Joes",
         "category" => "Groceries",
-        "amount" => "24.91",
+        "amount" => "43.91",
         "date" => "2019-01-14"
     ],
     [

@@ -134,10 +134,10 @@ function renderReceiptsOnDom(receiptDataArray) {
 
         var buttonDiv = $('<td>');
 
-        var deleteButton = $('<button>').addClass('deleteButton btn btn-danger btn-sm').text('Delete').attr('data-delete-row', deleteRowNumber);
+        var deleteButton = $('<button>').addClass('deleteButton btn btn-danger btn-sm glyphicon glyphicon-trash').attr('data-delete-row', deleteRowNumber);
         var updateButton = $("<button>", {
-            class: "btn btn-warning btn-sm",
-            text: 'Update',
+            class: "btn btn-warning btn-sm glyphicon glyphicon-edit",
+            
 
         }).attr('data-delete-row', deleteRowNumber).css({ "margin-right": "10px" });
 
