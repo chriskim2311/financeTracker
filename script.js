@@ -105,6 +105,12 @@ function addReceipt() {
         return;
 
     }
+   if( $("#storeNameDiv").addClass('has-error') || $("#amountDiv").addClass('has-error')) {
+       return
+   }
+
+
+
     addNewData(receiptDataObject);
     receiptDataArray.push(receiptDataObject);
     clearAddReceiptsFormInputs();
@@ -483,7 +489,7 @@ function amountValidation() {
     const editAmount = $("#editAmount").val();
 
     if ((!amountRegex.test(amount) && amount !== '') || parseInt(amount) < 0 || amount == '') {
-        $("#amountDiv").append(inputFeedback.text("Invalid Number"));
+        $("#amountDiv").append(inputFeedback.text("Not a Valid Number"));
         $("#amountDiv").addClass("has-error");
         return;
     } else {
@@ -493,7 +499,7 @@ function amountValidation() {
         $("#amountDiv").addClass("has-success");
     }
     if ((!amountRegex.test(editAmount) && editAmount !== '') || parseInt(editAmount) < 0 ||  editAmount == '') {
-        $("#editAmountDiv").append(inputFeedback.text("Invalid Number"));
+        $("#editAmountDiv").append(inputFeedback.text("Not a Valid Number"));
         $("#editAmountDiv").addClass("has-error");
     } else {
         $(".amountFeedback").remove();
