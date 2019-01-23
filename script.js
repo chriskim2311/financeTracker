@@ -32,6 +32,11 @@ var totalSpent = 0;
 function initializeApp() {
     getData()
     addClickHandlersToElements()
+    $("#amount").on("change", amountValidation);
+    $("#store_name").on("change", storeNameValidation)
+    // $("#category").on("change", categoryValidation)
+    // $("#date").on("change", categoryValidation)
+
 }
 
 /***************************************************************************************************
@@ -53,7 +58,9 @@ function addClickHandlersToElements() {
        none
  */
 function handleAddClicked() {
-    addReceipt()
+
+        addReceipt()
+    
 
 }
 /***************************************************************************************************
@@ -63,7 +70,7 @@ function handleAddClicked() {
  * @calls: clearAddStudentFormInputs
  */
 function handleCancelClick() {
-    clearAddStudentFormInputs();
+    clearAddReceiptsFormInputs();
 }
 /***************************************************************************************************
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -87,14 +94,17 @@ function addReceipt() {
     receiptDataObject.date = $("#date").val();
 
 
-    // $("#userDataForms").find(":input").each(function() {
-    //     receiptDataObject = {
-    //         store_name: store_name,
-    //         category: category,
-    //         amount: amount, 
-    //         date: date
-    //     }
-    // });
+    let storeNameFeedback = $("<div class='storeNameFeedback'>").addClass("invalid-feedback").text("Store name blank!");
+    let amountFeedback = $("<div class='amountFeedback'>").addClass("invalid-feedback").text("Amount blank!");
+    if ( receiptDataObject.store_name == '' &&  receiptDataObject.amount == '') {
+
+        $("#storeNameDiv").addClass('has-error');
+        $("#storeNameDiv").append(storeNameFeedback);
+        $("#amountDiv").addClass('has-error');
+        $("#amountDiv").append(amountFeedback);
+        return;
+
+    }
     addNewData(receiptDataObject);
     receiptDataArray.push(receiptDataObject);
     clearAddReceiptsFormInputs();
@@ -104,6 +114,12 @@ function addReceipt() {
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddReceiptsFormInputs() {
+    $("#storeNameDiv").removeClass('has-error');
+    $("#amountDiv").removeClass('has-error');
+    $("#storeNameDiv").removeClass('has-success');
+    $("#amountDiv").removeClass('has-success');
+    $(".amountFeedback").remove();
+    $(".storeNameFeedback").remove();
     $('#store_name').val("");
     $('#category').val("");
     $('#amount').val("");
@@ -251,6 +267,7 @@ function addNewData(receiptDataObject) {
             console.log(response);
             getData()
         }
+        
     }
     $.ajax(ajaxConfig)
 }
@@ -374,15 +391,15 @@ function updateReceiptModal() {
 
     var modalBody = $("<form>").addClass("modal-body");
 
-    var modalBodyContentStore = $("<div class='form-group' id='editNameDiv'>");
+    var modalBodyContentStore = $("<div class='form-group' id='editStoreNameDiv'>");
     var modalBodyContentStoreNameLabel = $("<label for='store_name' class='form-control-label'>").text("Store Name");
-    var modalBodyContentStoreName = $("<input type='text' id='editStoreName' class='form-control'>").text(receiptData.store_name);
+    var modalBodyContentStoreName = $("<input type='text' id='editStoreName' class='form-control' onChange='storeNameValidation()'>").text(receiptData.store_name);
     modalBodyContentStoreName.val(receiptData.store_name);
     modalBodyContentStore.append(modalBodyContentStoreNameLabel);
     modalBodyContentStore.append(modalBodyContentStoreName);
 
 
-    var modalBodyContentCategory = $("<div class='form-group' id='editNameDiv'>");
+    var modalBodyContentCategory = $("<div class='form-group' id='editCategoryDiv'>");
     var modalBodyContentCategoryLabel = $("<label for='category' class='form-control-label'>").text("Category");
     var modalBodyContentCategoryValue = $("<input type='text' id='editCategory' class='form-control'>").text(receiptData.category);
     modalBodyContentCategoryValue.val(receiptData.category);
@@ -390,14 +407,14 @@ function updateReceiptModal() {
     modalBodyContentCategory.append(modalBodyContentCategoryValue);
 
 
-    var modalBodyContentAmount = $("<div class='form-group' id='editNameDiv'>");
+    var modalBodyContentAmount = $("<div class='form-group' id='editAmountDiv'>");
     var modalBodyContentAmountLabel = $("<label for='amount' class='form-control-label'>").text("Amount");
-    var modalBodyContentAmountValue = $("<input type='text' id='editAmount' class='form-control'>").text(receiptData.amount);
+    var modalBodyContentAmountValue = $("<input type='text' id='editAmount' class='form-control' onChange='amountValidation()'> ").text(receiptData.amount);
     modalBodyContentAmountValue.val(receiptData.amount);
     modalBodyContentAmount.append(modalBodyContentAmountLabel);
     modalBodyContentAmount.append(modalBodyContentAmountValue);
 
-    var modalBodyContentDate = $("<div class='form-group' id='editNameDiv'>");
+    var modalBodyContentDate = $("<div class='form-group' id='editDateDiv'>");
     var modalBodyContentDateLabel = $("<label for='date' class='form-control-label'>").text("Amount");
     var modalBodyContentDateValue = $("<input type='Date' id='editDate' class='form-control'>").text(receiptData.date);
     modalBodyContentDateValue.val(receiptData.date);
@@ -441,7 +458,7 @@ function updateReceiptModal() {
 
 
 function updateReceiptObject(ID) {
-    debugger
+    
     var updatedReceipt = {
         action: "update",
         ID: ID,
@@ -455,3 +472,67 @@ function updateReceiptObject(ID) {
 
 
 }
+
+
+
+function amountValidation() {
+    let inputFeedback = $("<div class='amountFeedback'>").addClass("invalid-feedback");
+   
+    const amountRegex = /^\$?[0-9]+(\.[0-9][0-9])?$/; 
+    const amount = $("#amount").val();
+    const editAmount = $("#editAmount").val();
+
+    if ((!amountRegex.test(amount) && amount !== '') || parseInt(amount) < 0 || amount == '') {
+        $("#amountDiv").append(inputFeedback.text("Invalid Number"));
+        $("#amountDiv").addClass("has-error");
+        return;
+    } else {
+        $(".amountFeedback").remove();
+        $("#amountDiv").removeClass("has-error");
+        $("#amountDiv").removeClass("has-warning");
+        $("#amountDiv").addClass("has-success");
+    }
+    if ((!amountRegex.test(editAmount) && editAmount !== '') || parseInt(editAmount) < 0 ||  editAmount == '') {
+        $("#editAmountDiv").append(inputFeedback.text("Invalid Number"));
+        $("#editAmountDiv").addClass("has-error");
+    } else {
+        $(".amountFeedback").remove();
+        $("#editAmountDiv").removeClass("has-error");
+        $("#editAmountDiv").removeClass("has-warning");
+        $("#editAmountDiv").addClass("has-success");
+    }
+}
+
+
+
+
+function storeNameValidation() {
+    let inputFeedback2 = $("<div class='storeNameFeedback'>").addClass("invalid-feedback");
+   
+    const storeNameRegex = /^(?!\s)(?!.*\s$)(?=.*[a-zA-Z0-9])[a-zA-Z0-9 '~?!]{2,}$/;
+    const storeName = $("#store_name").val();
+    const editName = $("#editAmount").val();
+
+    if ((!storeNameRegex.test(storeName) && storeName !== '' || storeName == '' ) ) {
+        $("#storeNameDiv").addClass("has-error");
+        $("#storeNameDiv").append(inputFeedback2.text("Invalid Store Name"));
+        return;
+    } else {
+        $(".storeNameFeedback").remove();
+        $("#storeNameDiv").removeClass("has-error");
+        $("#storeNameDiv").removeClass("has-warning");
+        $("#storeNameDiv").addClass("has-success");
+    }
+    if (!storeNameRegex.test(editName) && editName !== '' || editName.length > 50 || storeName == '' ) {
+        $("#editStoreNameDiv").addClass("has-error");
+        $("#editStoreNameDiv").append(inputFeedback2.text("Invalid Store Name"));
+    } else {
+        $(".storeNameFeedback").remove();
+        $("#editStoreNameDiv").removeClass("has-error");
+        $("#editStoreNameDiv").removeClass("has-warning");
+        $("#editStoreNameDiv").addClass("has-success");
+    }
+}
+
+
+
