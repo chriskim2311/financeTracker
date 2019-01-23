@@ -105,6 +105,12 @@ function addReceipt() {
         return;
 
     }
+   if( $("#storeNameDiv").addClass('has-error') || $("#amountDiv").addClass('has-error')) {
+       return
+   }
+
+
+
     addNewData(receiptDataObject);
     receiptDataArray.push(receiptDataObject);
     clearAddReceiptsFormInputs();
