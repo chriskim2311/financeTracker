@@ -59,8 +59,8 @@ function addClickHandlersToElements() {
  */
 function handleAddClicked() {
 
-        addReceipt()
-    
+    addReceipt()
+
 
 }
 /***************************************************************************************************
@@ -96,8 +96,7 @@ function addReceipt() {
 
     let storeNameFeedback = $("<div class='storeNameFeedback'>").addClass("invalid-feedback").text("Store name blank!");
     let amountFeedback = $("<div class='amountFeedback'>").addClass("invalid-feedback").text("Amount blank!");
-    if ( receiptDataObject.store_name == '' &&  receiptDataObject.amount == '') {
-
+    if ($("#store_name").val() == '' && $("#amount").val() == '') {
         $("#storeNameDiv").addClass('has-error');
         $("#storeNameDiv").append(storeNameFeedback);
         $("#amountDiv").addClass('has-error');
@@ -105,9 +104,20 @@ function addReceipt() {
         return;
 
     }
-   if( $("#storeNameDiv").addClass('has-error') || $("#amountDiv").addClass('has-error')) {
-       return
-   }
+    if ($("#store_name").val() == '') {
+        $("#storeNameDiv").addClass('has-error');
+        $("#storeNameDiv").append(storeNameFeedback);
+
+
+    }
+    if ($("#amount").val() == '') {
+        $("#amountDiv").addClass('has-error');
+        $("#amountDiv").append(amountFeedback);
+
+    }
+    if ($("#storeNameDiv").hasClass('has-error') || $("#amountDiv").hasClass('has-error')) {
+        return
+    }
 
 
 
@@ -159,7 +169,7 @@ function renderReceiptsOnDom(receiptDataArray) {
         var deleteButton = $('<button>').addClass('deleteButton btn btn-danger btn-sm glyphicon glyphicon-trash').attr('data-delete-row', deleteRowNumber);
         var updateButton = $("<button>", {
             class: "btn btn-warning btn-sm glyphicon glyphicon-edit",
-            
+
 
         }).attr('data-delete-row', deleteRowNumber).css({ "margin-right": "10px" });
 
@@ -273,7 +283,7 @@ function addNewData(receiptDataObject) {
             console.log(response);
             getData()
         }
-        
+
     }
     $.ajax(ajaxConfig)
 }
@@ -464,7 +474,7 @@ function updateReceiptModal() {
 
 
 function updateReceiptObject(ID) {
-    
+
     var updatedReceipt = {
         action: "update",
         ID: ID,
@@ -483,11 +493,12 @@ function updateReceiptObject(ID) {
 
 function amountValidation() {
     let inputFeedback = $("<div class='amountFeedback'>").addClass("invalid-feedback");
-   
-    const amountRegex = /^\$?[0-9]+(\.[0-9][0-9])?$/; 
+
+    const amountRegex = /^\$?[0-9]+(\.[0-9][0-9])?$/;
     const amount = $("#amount").val();
     const editAmount = $("#editAmount").val();
 
+    if(amount) {
     if ((!amountRegex.test(amount) && amount !== '') || parseInt(amount) < 0 || amount == '') {
         $("#amountDiv").append(inputFeedback.text("Not a Valid Number"));
         $("#amountDiv").addClass("has-error");
@@ -498,9 +509,13 @@ function amountValidation() {
         $("#amountDiv").removeClass("has-warning");
         $("#amountDiv").addClass("has-success");
     }
-    if ((!amountRegex.test(editAmount) && editAmount !== '') || parseInt(editAmount) < 0 ||  editAmount == '') {
+}
+
+    if(editAmount) {
+    if ((!amountRegex.test(editAmount) && editAmount !== '') || parseInt(editAmount) < 0 || editAmount == '') {
         $("#editAmountDiv").append(inputFeedback.text("Not a Valid Number"));
         $("#editAmountDiv").addClass("has-error");
+        return
     } else {
         $(".amountFeedback").remove();
         $("#editAmountDiv").removeClass("has-error");
@@ -508,18 +523,19 @@ function amountValidation() {
         $("#editAmountDiv").addClass("has-success");
     }
 }
+}
 
 
 
 
 function storeNameValidation() {
     let inputFeedback2 = $("<div class='storeNameFeedback'>").addClass("invalid-feedback");
-   
+
     const storeNameRegex = /^(?!\s)(?!.*\s$)(?=.*[a-zA-Z0-9])[a-zA-Z0-9 '~?!]{2,}$/;
     const storeName = $("#store_name").val();
-    const editName = $("#editAmount").val();
-
-    if ((!storeNameRegex.test(storeName) && storeName !== '' || storeName == '' ) ) {
+    const editName = $("#editStoreName").val();
+if(storeName){
+    if ((!storeNameRegex.test(storeName) && storeName !== '' || storeName == '')) {
         $("#storeNameDiv").addClass("has-error");
         $("#storeNameDiv").append(inputFeedback2.text("Invalid Store Name"));
         return;
@@ -528,15 +544,21 @@ function storeNameValidation() {
         $("#storeNameDiv").removeClass("has-error");
         $("#storeNameDiv").removeClass("has-warning");
         $("#storeNameDiv").addClass("has-success");
+
     }
-    if (!storeNameRegex.test(editName) && editName !== '' || editName.length > 50 || storeName == '' ) {
-        $("#editStoreNameDiv").addClass("has-error");
-        $("#editStoreNameDiv").append(inputFeedback2.text("Invalid Store Name"));
-    } else {
-        $(".storeNameFeedback").remove();
-        $("#editStoreNameDiv").removeClass("has-error");
-        $("#editStoreNameDiv").removeClass("has-warning");
-        $("#editStoreNameDiv").addClass("has-success");
+}
+    if (editName) {
+        if (!storeNameRegex.test(editName) && editName !== '' || editName.length < 50 || storeName == '') {
+            $("#editStoreNameDiv").addClass("has-error");
+            $("#editStoreNameDiv").append(inputFeedback2.text("Invalid Store Name"));
+            return
+        } else {
+            $(".storeNameFeedback").remove();
+            $("#editStoreNameDiv").removeClass("has-error");
+            $("#editStoreNameDiv").removeClass("has-warning");
+            $("#editStoreNameDiv").addClass("has-success");
+            return
+        }
     }
 }
 
