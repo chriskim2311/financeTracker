@@ -81,13 +81,6 @@ function handleCancelClick() {
 function addReceipt() {
 
     var receiptDataObject = {};
-
-    // if (receiptDataArray.length) {
-    //     receiptDataArray.id = receiptDataArray.length;
-    // }
-    // else {
-    //     receiptDataArray.id = 0;
-    // }
     receiptDataObject.store_name = $("#store_name").val();
     receiptDataObject.category = $("#category").val();
     receiptDataObject.amount = $("#amount").val();
@@ -172,8 +165,6 @@ function renderReceiptsOnDom(receiptDataArray) {
 
 
         }).attr('data-delete-row', deleteRowNumber).css({ "margin-right": "10px" });
-
-        //   deleteButton.on("click", (receiptID)=>{ deleteReceiptModal(receiptID)});
         updateButton.on("click", function () {
             updateReceiptModal()
         });
@@ -182,10 +173,7 @@ function renderReceiptsOnDom(receiptDataArray) {
         deleteRowNumber++;
 
         deleteButton.on('click', function () {
-            // var receiptID = receiptPosition.ID;
             deleteReceiptModal(addRow)
-            // deleteData(receiptID);
-
         })
 
         $(".student-list tbody").append(addRow);
@@ -246,7 +234,6 @@ function getData() {
 
     var receiptData = {
         'action': 'read'
-        // api_key: "RBu6Wfy1bo"
     };
     var ajaxConfig = {
         data: receiptData,
@@ -266,7 +253,6 @@ function getData() {
 
 function addNewData(receiptDataObject) {
     var receiptData = {
-        // api_key: "RBu6Wfy1bo",
         'action': 'insert',
         store_name: receiptDataObject.store_name,
         category: receiptDataObject.category,
@@ -292,7 +278,6 @@ function addNewData(receiptDataObject) {
 
 function deleteData(ID) {
     var receiptData = {
-        // api_key: "RBu6Wfy1bo",
         'action': 'delete',
         ID: ID,
 
@@ -322,7 +307,6 @@ function updateReceiptData(updatedReceipt) {
         data: updatedReceipt,
 
         success: function (response) {
-            // receiptDataArray = response.clients;
             console.log(response);
             getData()
             return (response);
@@ -367,7 +351,7 @@ function deleteReceiptModal(addRow) {
         deleteData(ID);
         deleteReceiptRow(thisRowIndex)
 
-    }); // Anonymous function to avoid firing as soon as modal loads
+    }); 
     confirmDeleteButton.text("DELETE");
     modalFooter.append(cancelDeleteButton);
     modalFooter.append(confirmDeleteButton);
@@ -377,7 +361,6 @@ function deleteReceiptModal(addRow) {
     modalFade.append(modalDialog);
 
     $(modalFade).modal("show");
-    // When the modal hides, call the remove method to remove the modal from the DOM
     $(modalFade).on('hidden.bs.modal', () => {
         $(modalFade).remove();
     });
@@ -462,10 +445,8 @@ function updateReceiptModal() {
     modalFade.append(modalDialog);
 
     $(modalFade).modal("show");
-    // When the modal hides, call the remove method to remove the modal from the DOM which clears the form after use
     $(modalFade).on('hidden.bs.modal', () => {
         $(modalFade).remove();
-        // $("#storeNameDiv, #studentCourseDiv, #studentGradeDiv").removeClass("has-success");
     });
 
 
