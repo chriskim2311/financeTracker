@@ -94,6 +94,11 @@ function addReceipt() {
         if ($("#storeNameDiv").hasClass("has-error") && $("#amountDiv").hasClass("has-error")) {
             return
         }
+        if(($("#storeNameDiv").hasClass("has-error") || $("#amountDiv").hasClass("has-error"))) {
+            return
+        }
+
+
         $("#storeNameDiv").addClass('has-error');
         $("#storeNameDiv").append(storeNameFeedback);
         $("#amountDiv").addClass('has-error');
