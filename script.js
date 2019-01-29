@@ -30,6 +30,7 @@ var totalSpent = 0;
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp() {
+    disclaimerModal()
     getData()
     addClickHandlersToElements()
     $("#amount").on("change", amountValidation);
@@ -90,6 +91,9 @@ function addReceipt() {
     let storeNameFeedback = $("<div class='storeNameFeedback'>").addClass("invalid-feedback").text("Store name blank!");
     let amountFeedback = $("<div class='amountFeedback'>").addClass("invalid-feedback").text("Amount blank!");
     if ($("#store_name").val() == '' && $("#amount").val() == '') {
+        if ($("#storeNameDiv").hasClass("has-error") && $("#amountDiv").hasClass("has-error")) {
+            return
+        }
         $("#storeNameDiv").addClass('has-error');
         $("#storeNameDiv").append(storeNameFeedback);
         $("#amountDiv").addClass('has-error');
@@ -98,12 +102,18 @@ function addReceipt() {
 
     }
     if ($("#store_name").val() == '') {
+        if ($("#storeNameDiv").hasClass("has-error")) {
+            return
+        }
         $("#storeNameDiv").addClass('has-error');
         $("#storeNameDiv").append(storeNameFeedback);
 
 
     }
     if ($("#amount").val() == '') {
+        if ($("#amountDiv").hasClass("has-error")) {
+            return
+        }
         $("#amountDiv").addClass('has-error');
         $("#amountDiv").append(amountFeedback);
 
@@ -328,17 +338,13 @@ function deleteReceiptModal(addRow) {
 
 
     // Modal
-    var modalFade = $("<div class='modal fade' id='editStudentModal' tabindex='-1' role='dialog' aria-labelledby='editStudentModalLabel' aria-hidden='true'>");
+    var modalFade = $("<div class='modal fade' id='editStudentModal' tabindex='-1' role='dialog' aria-labelledby='editStudentModalLabel' aria-hidden='true' data-backdrop='static' data-keyboard='false'>");
     var modalDialog = $("<div class='modal-dialog' role='document'>");
     var modalContent = $("<div>").addClass("modal-content");
     var modalHeader = $("<div>").addClass("modal-header");
     var modalTitle = $("<div>").addClass("modal-title").text("Are you sure you want to remove this receipt?");
-    var closeModalButton = $("<button type='button' class='close' data-dismiss='modal' aria-label='Close'>");
-    var closeModalButtonSymbol = $("<span aria-hidden='true'>").text("x");
-    closeModalButton.append(closeModalButtonSymbol);
 
     modalHeader.append(modalTitle);
-    modalHeader.append(closeModalButton);
     modalContent.append(modalHeader);
 
 
@@ -351,7 +357,7 @@ function deleteReceiptModal(addRow) {
         deleteData(ID);
         deleteReceiptRow(thisRowIndex)
 
-    }); 
+    });
     confirmDeleteButton.text("DELETE");
     modalFooter.append(cancelDeleteButton);
     modalFooter.append(confirmDeleteButton);
@@ -374,17 +380,13 @@ function updateReceiptModal() {
 
 
     // Modal
-    var modalFade = $("<div class='modal fade' id='editStudentModal' tabindex='-1' role='dialog' aria-labelledby='editStudentModalLabel' aria-hidden='true'>");
+    var modalFade = $("<div class='modal fade' id='editStudentModal' tabindex='-1' role='dialog' aria-labelledby='editStudentModalLabel' aria-hidden='true'  data-backdrop='static' data-keyboard='false'>");
     var modalDialog = $("<div class='modal-dialog' role='document'>");
     var modalContent = $("<div>").addClass("modal-content");
     var modalHeader = $("<div>").addClass("modal-header");
     var modalTitle = $("<div>").addClass("modal-title").text("Edit Receipt");
-    var closeModalButton = $("<button type='button' class='close' data-dismiss='modal' aria-label='Close'>");
-    var closeModalButtonSymbol = $("<span aria-hidden='true'>").text("x");
-    closeModalButton.append(closeModalButtonSymbol);
 
     modalHeader.append(modalTitle);
-    modalHeader.append(closeModalButton);
     modalContent.append(modalHeader);
 
 
@@ -479,31 +481,37 @@ function amountValidation() {
     const amount = $("#amount").val();
     const editAmount = $("#editAmount").val();
 
-    if(amount) {
-    if ((!amountRegex.test(amount) && amount !== '') || parseInt(amount) < 0 || amount == '') {
-        $("#amountDiv").append(inputFeedback.text("Not a Valid Number"));
-        $("#amountDiv").addClass("has-error");
-        return;
-    } else {
-        $(".amountFeedback").remove();
-        $("#amountDiv").removeClass("has-error");
-        $("#amountDiv").removeClass("has-warning");
-        $("#amountDiv").addClass("has-success");
+    if (amount) {
+        if ((!amountRegex.test(amount) && amount !== '') || parseInt(amount) < 0 || amount == '') {
+            if ($("#amountDiv").hasClass("has-error")) {
+                return
+            }
+            $("#amountDiv").append(inputFeedback.text("Not a Valid Number"));
+            $("#amountDiv").addClass("has-error");
+            return;
+        } else {
+            $(".amountFeedback").remove();
+            $("#amountDiv").removeClass("has-error");
+            $("#amountDiv").removeClass("has-warning");
+            $("#amountDiv").addClass("has-success");
+        }
     }
-}
 
-    if(editAmount) {
-    if ((!amountRegex.test(editAmount) && editAmount !== '') || parseInt(editAmount) < 0 || editAmount == '') {
-        $("#editAmountDiv").append(inputFeedback.text("Not a Valid Number"));
-        $("#editAmountDiv").addClass("has-error");
-        return
-    } else {
-        $(".amountFeedback").remove();
-        $("#editAmountDiv").removeClass("has-error");
-        $("#editAmountDiv").removeClass("has-warning");
-        $("#editAmountDiv").addClass("has-success");
+    if (editAmount) {
+        if ((!amountRegex.test(editAmount) && editAmount !== '') || parseInt(editAmount) < 0 || editAmount == '') {
+            if ($("#editAmountDiv").hasClass("has-error")) {
+                return
+            }
+            $("#editAmountDiv").append(inputFeedback.text("Not a Valid Number"));
+            $("#editAmountDiv").addClass("has-error");
+            return
+        } else {
+            $(".amountFeedback").remove();
+            $("#editAmountDiv").removeClass("has-error");
+            $("#editAmountDiv").removeClass("has-warning");
+            $("#editAmountDiv").addClass("has-success");
+        }
     }
-}
 }
 
 
@@ -515,21 +523,27 @@ function storeNameValidation() {
     const storeNameRegex = /^(?!\s)(?!.*\s$)(?=.*[a-zA-Z0-9])[a-zA-Z0-9 '~?!]{2,}$/;
     const storeName = $("#store_name").val();
     const editName = $("#editStoreName").val();
-if(storeName){
-    if ((!storeNameRegex.test(storeName) && storeName !== '' || storeName == '')) {
-        $("#storeNameDiv").addClass("has-error");
-        $("#storeNameDiv").append(inputFeedback2.text("Invalid Store Name"));
-        return;
-    } else {
-        $(".storeNameFeedback").remove();
-        $("#storeNameDiv").removeClass("has-error");
-        $("#storeNameDiv").removeClass("has-warning");
-        $("#storeNameDiv").addClass("has-success");
+    if (storeName) {
+        if ((!storeNameRegex.test(storeName) && storeName !== '' || storeName == '')) {
+            if ($("#storeNameDiv").hasClass("has-error")) {
+                return
+            }
+            $("#storeNameDiv").addClass("has-error");
+            $("#storeNameDiv").append(inputFeedback2.text("Invalid Store Name"));
+            return;
+        } else {
+            $(".storeNameFeedback").remove();
+            $("#storeNameDiv").removeClass("has-error");
+            $("#storeNameDiv").removeClass("has-warning");
+            $("#storeNameDiv").addClass("has-success");
 
+        }
     }
-}
     if (editName) {
         if (!storeNameRegex.test(editName) && editName !== '' || editName.length < 50 || storeName == '') {
+            if ($("#editStoreNameDiv").hasClass("has-error")) {
+                return
+            }
             $("#editStoreNameDiv").addClass("has-error");
             $("#editStoreNameDiv").append(inputFeedback2.text("Invalid Store Name"));
             return
@@ -543,5 +557,34 @@ if(storeName){
     }
 }
 
+function disclaimerModal() {
+
+
+
+    // Modal
+    var modalFade = $("<div class='modal fade' id='editStudentModal' tabindex='-1' role='dialog' aria-labelledby='editStudentModalLabel' aria-hidden='true'>");
+    var modalDialog = $("<div class='modal-dialog' role='document'>");
+    var modalContent = $("<div>").addClass("modal-content");
+    var modalHeader = $("<div>").addClass("modal-header");
+    var modalTitle = $("<div>").addClass("modal-title").text("Disclaimer: This is a public application please do not add any sensitive or private information.");
+
+    modalHeader.append(modalTitle);
+
+    modalContent.append(modalHeader);
+
+
+    var modalFooter = $("<div>").addClass("modal-footer");
+    var cancelDeleteButton = $("<button class='btn btn-secondary' data-dismiss='modal'>");
+    cancelDeleteButton.text("Cancel");
+    modalFooter.append(cancelDeleteButton);
+    modalContent.append(modalFooter);
+    modalDialog.append(modalContent);
+    modalFade.append(modalDialog);
+
+    $(modalFade).modal("show");
+    $(modalFade).on('hidden.bs.modal', () => {
+        $(modalFade).remove();
+    });
+}
 
 
